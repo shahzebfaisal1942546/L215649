@@ -1,0 +1,157 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+#from sklearn import linear_model
+
+#
+#
+#
+#
+#
+#Question 1
+
+R = int(input("Enter the number of rows:")) 
+                            # Initialize matrix 
+matrix = [] 
+print("Enter the entries row wise:") 
+  
+                            # For user input 
+for i in range(R):          # A for loop for row entries 
+    a =[] 
+    for j in range(R):      # A for loop for column entries 
+         a.append(int(input())) 
+    matrix.append(a) 
+  
+                            # For printing the matrix 
+print("Matrix :")
+for i in range(R): 
+    for j in range(R): 
+        print(matrix[i][j], end = " ") 
+    print() 
+#
+#
+#
+#
+#    
+#Question 2
+
+df = pd.read_csv('StudentMarkSheet.csv')
+df.info()
+df.head()
+#49th row contains missing values
+df = df.drop(49)
+#Number of Rows with missing values
+#RMV=sum(df.isnull().values.ravel())
+#print("Number of Rows with missing values :",RMV)
+#Number of rows before 49th row
+#print("Number of rows before :",sum(df.head(49)))
+#Number of rows after 49th row
+#print("Number of rows after :",sum(df.tail(49)))
+print (df)
+#
+#
+#
+#
+#
+#Question 3
+
+print("Average marks in Biology : ")
+Avg_Biology = df[0:38].mean()
+print(Avg_Biology)
+
+print("Average marks in Chemistry: ")
+Avg_Chemistry = df[38:65].mean()
+print(Avg_Chemistry)
+
+print("Average marks in Mathematics: ")
+Avg_Mathematics = df[65:102].mean()
+print(Avg_Mathematics)
+
+print("Average marks in Philosophy: ")
+Avg_Philosophy = df[102:140].mean()
+print(Avg_Philosophy)
+
+print("Average marks in Physics: ")
+Avg_Physics = df[140:161].mean()
+print(Avg_Physics)
+
+print("Average marks in Sociology: ")
+Avg_Sociology = df[161:].mean()
+print(Avg_Sociology)
+
+                                        #Plot averages in bar graph
+averages = [int(Avg_Biology),int(Avg_Chemistry),int(Avg_Mathematics),int(Avg_Philosophy),int(Avg_Physics),int(Avg_Sociology)]
+
+plt.bar(averages,averages)
+plt.xlabel("Averages")
+plt.show()
+#
+#
+#
+#
+#
+#Question 4
+
+def simple_linear_regression(input_feature,output):
+    Xi = input_feature
+    Yi = output
+    #Total Data Points:
+    n = len(Xi)
+    #X bar:
+    Xi_mean = Xi.mean()
+    #Y bar: 
+    Yi_mean = Yi.mean()
+    #Sum Of X:
+    S_Xi = (Xi).sum()
+    #Sum Of Y:
+    S_Yi = (Yi).sum()
+    #Sum Of (X*Y) multipliplied by n:
+    S_XiYi = ((Xi*Yi).sum())*n
+    #Sum Of X*Sum of Y:
+    S_Xi_S_Yi = S_Xi*S_Yi
+    #Sum of (X*X) multiplied by n:
+    S_XiXi = ((Xi*Xi).sum())*num
+    #Square Of sum of X:
+    S_Xi_Square = S_Xi*S_Xi
+    #Slope:
+    slope = (S_XiYi-S_Xi_S_Yi)/(S_XiXi-S_Xi_Square)
+    #Intercept: 
+    intercept = Yi_mean - slope * Xi_mean
+    
+    return slope,intercept
+    
+df = pd.read_csv('CatData.csv')
+df.info()
+df.head()
+df = df.dropna()
+print (df)
+
+df = df[["Tail Length (cm)","Mass (kg)"]]
+print(df.head())
+
+                                    #Training Data
+train = df[:num]
+print("Train : ",len(train))
+
+actual_slope,actual_intercept = simple_linear_regression(train["Tail Length (cm)"],train["Mass (kg)"])
+print("Slpoe : ",actual_slope)
+print("Intercept : ",actual_intercept)
+
+regr = linear_model.LinearRegression()
+
+train_x = np.array(train[["Tail Length (cm)"]])
+train_y = np.array(train[["Mass (kg)"]])
+
+regr.fit(train_x,train_y)
+coefficients = regr.coef_
+intercept = regr.intercept_
+                                        #Slope
+print("Slope : ",coefficients)
+                                        #Intercept
+print("Intercept : ",intercept)
+
+plt.scatter(df["Tail Length (cm)"],df["Mass (kg)"])
+plt.plot(train_x,coefficients[0]*train_x+intercept,color="red")
+plt.xlabel("Tail Length (cm)")
+plt.ylabel("Mass (kg)")
+plt.show
